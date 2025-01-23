@@ -2,82 +2,53 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace Journal
+public class Journal
 {
-    public class Journal
+    private List<Entry> _entries = new List<Entry>();
+
+    public void AddEntry(Entry newEntry)
     {
-        private List<JournalEntry> entries = new List<JournalEntry>();
-        private List<string> prompts = new List<string>
-        {
-            "What Family did i visit Today?",
-            "What was the best part of my day?",
-            "What was the connection I made today?",
-            "What Would i have done differently Today?",
-            "How did I see the hand of the Lord in my life today?"
-        };
+        _entries.Add(newEntry);
+    }
 
-        public void AddEntry()
+    public void DisplayAll()
+    {
+        foreach (Entry entry in _entries)
         {
-            Random random = new Random();
-            string prompt = prompts[random.Next(prompts.Count)];
-            Console.WriteLine($"Prompt: {prompt}");
-            Console.Write("Your response: ");
-            string response = Console.ReadLine();
-            entries.Add(new JournalEntry(prompt, response));
-            Console.WriteLine("Entry saved.\n");
+            entry.Display();
         }
+    }
 
-        public void DisplayEntries()
+    public void SaveToFile(string file)
+    {
+        using (StreamWriter writer = new StreamWriter(file))
         {
-            if (entries.Count == 0)
+            foreach (Entry entry in _entries)
             {
-                Console.WriteLine("No entries in the journal.\n");
-                return;
-            }
-
-            Console.WriteLine("Journal Entries:");
-            foreach (var entry in entries)
-            {
-                Console.WriteLine(entry);
+                writer.WriteLine(entry.ToCsv());
             }
         }
+        Console.WriteLine("Journal saved successfully.");
+    }
 
-        public void SaveToFile()
+    public void LoadFromFile(string file)
+    {
+        if (!File.Exists(file))
         {
-            Console.Write("Enter the filename to save the journal (e.g., journal.csv): ");
-            string fileName = Console.ReadLine();
-
-            using (StreamWriter writer = new StreamWriter(fileName))
-            {
-                foreach (var entry in entries)
-                {
-                    writer.WriteLine(entry.ToCsvFormat());
-                }
-            }
-
-            Console.WriteLine("Journal saved successfully.\n");
+            Console.WriteLine("File not found.");
+            return;
         }
 
-        public void LoadFromFile()
+        _entries.Clear();
+        string[] lines = File.ReadAllLines(file);
+        foreach (string line in lines)
         {
-            Console.Write("Enter the filename to load the journal: ");
-            string fileName = Console.ReadLine();
-
-            if (!File.Exists(fileName))
+            Entry entry = Entry.FromCsv(line);
+            if (entry != null)
             {
-                Console.WriteLine("File not found.\n");
-                return;
+                _entries.Add(entry);
             }
-
-            entries.Clear();
-            var lines = File.ReadAllLines(fileName);
-
-            foreach (var line in lines)
-            {
-                entries.Add(JournalEntry.FromCsvFormat(line));
-            }
-
-            Console.WriteLine("Journal loaded successfully.\n");
         }
+        Console.WriteLine("Journal loaded successfully.");
     }
 }
