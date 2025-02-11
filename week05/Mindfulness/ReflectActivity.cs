@@ -3,13 +3,17 @@ using System.Collections.Generic;
 
 public class ReflectActivity : Activity {
     private List<string> _prompts = new() {
+        "Think of a time you have felt the Love of the saviour",
         "Think of a time when you stood up for someone else.",
+        "Think of the time you have felt the impact of the Holy Ghost.",
         "Think of a time when you did something really difficult.",
         "Think of a time when you helped someone in need."
+
     };
 
     private List<string> _questions = new() {
         "Why was this experience meaningful to you?",
+        "How did this exprience influence you Decision",
         "How did you feel when it was complete?",
         "What did you learn from this experience?"
     };
