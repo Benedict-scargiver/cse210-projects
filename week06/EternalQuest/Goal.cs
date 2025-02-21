@@ -1,6 +1,6 @@
+/* File: Goal.cs */
 using System;
-
-public abstract class Goal
+abstract class Goal
 {
     protected string _shortName;
     protected string _description;
@@ -13,13 +13,7 @@ public abstract class Goal
         _points = points;
     }
 
-    public abstract void RecordEvent();
+    public abstract void RecordEvent(ref int score);
     public abstract bool IsComplete();
-    public abstract string GetDetailsString();
     public abstract string GetStringRepresentation();
-    
-    public override string ToString()
-    {
-        return $"{_shortName} - {_description} - {_points} points";
-    }
 }

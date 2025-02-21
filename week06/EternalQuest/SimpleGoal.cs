@@ -1,4 +1,4 @@
-public class SimpleGoal : Goal
+class SimpleGoal : Goal
 {
     private bool _isComplete;
 
@@ -7,23 +7,17 @@ public class SimpleGoal : Goal
         _isComplete = false;
     }
 
-    public override void RecordEvent()
+    public override void RecordEvent(ref int score)
     {
-        _isComplete = true;
+        if (!_isComplete)
+        {
+            _isComplete = true;
+            score += _points;
+            Console.WriteLine("Excellent! You have done well!");
+        }
     }
 
-    public override bool IsComplete()
-    {
-        return _isComplete;
-    }
+    public override bool IsComplete() => _isComplete;
 
-    public override string GetStringRepresentation()
-    {
-        return $"[ {(_isComplete ? "X" : " ")} ] {_shortName}";
-    }
-
-    public override string GetDetailsString()
-    {
-        return base.ToString();
-    }
+    public override string GetStringRepresentation() => $"[ {(IsComplete() ? "X" : " ")} ] {_shortName} - {_description}";
 }
